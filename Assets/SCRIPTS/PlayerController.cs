@@ -11,7 +11,7 @@ public class PlayerController : MonoBehaviour
     private GameObject focalPoint; //asignar el focal point
     
     private float powerupForce = 15f;
-    public bool hasPowerup;//comprobar si lo ha tocado o no
+    public bool hasPowerup;//comprobar si lo ha tocado o no (on/off)
     private void Start()
     {
         _rigidbody = GetComponent<Rigidbody>(); //asignar variable ***
@@ -28,19 +28,26 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)//trigger qu al chocar desaparezca
     {
-        if (other.gameObject.CompareTag("PowerUp"))
+        if (other.gameObject.CompareTag("PowerUp")) //
         {
-            hasPowerup = true;
+            hasPowerup = true; //se activa
             Destroy(other.gameObject);
+
+            StartCoroutine(PowerupCountDown());
         }
     }
     private void OnCollisionEnter(Collision other)
     {
-        if (other.gameObject.CompareTag("Enemy") && hasPowerup)
+        if (other.gameObject.CompareTag("Enemy") && hasPowerup) //lo repele
         {
             Rigidbody enemyRigidbody = other.gameObject.GetComponent<Rigidbody>();
-            Vector3 awayFromPlayer =(other.gameObject.transform.position - transform.position).normalized;
+            Vector3 awayFromPlayer =(other.gameObject.transform.position - transform.position).normalized; //que la distancia sea 1
             enemyRigidbody.AddForce(awayFromPlayer * powerupForce, ForceMode.Impulse);
         }
+    }
+    private IEnumerator PowerupCountDown() //IE = interface/ es una corrutina
+    {
+        yield return new WaitForSeconds(6); //yield =esperar y devuelve 6s
+        hasPowerup = false;
     }
 }

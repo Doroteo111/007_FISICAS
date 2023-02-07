@@ -18,6 +18,11 @@ public class Enemy : MonoBehaviour
         Vector3 direction = (player.transform.position - transform.position).normalized;  
         //el enemigo persigue al player, coge dos puntos y dibuja una línea
         _rigidbody.AddForce(direction * speed); //aplicas un empuje en direccion  al player
-        
+
+        if (transform.position.y < -2) //si el enemigo cae (al tirarlo)
+        {
+            Destroy(gameObject);
+        }
+
     }
 }

@@ -12,6 +12,8 @@ public class PlayerController : MonoBehaviour
     
     private float powerupForce = 15f;
     public bool hasPowerup;//comprobar si lo ha tocado o no (on/off)
+    
+    public GameObject[] powerupIndicators;
     private void Start()
     {
         _rigidbody = GetComponent<Rigidbody>(); //asignar variable ***
@@ -47,7 +49,15 @@ public class PlayerController : MonoBehaviour
     }
     private IEnumerator PowerupCountDown() //IE = interface/ es una corrutina
     {
-        yield return new WaitForSeconds(6); //yield =esperar y devuelve 6s
-        hasPowerup = false;
+        //yield return new WaitForSeconds(6); //yield =esperar y devuelve 6s
+        for (int i = 0; i < powerupIndicators.Length; i++)
+        {
+            powerupIndicators[i].SetActive(true); //activa el 1r elemento, pasan 2 segundos desactiva, despues el 2 y 3 y luego se va desvanece
+            yield return new WaitForSeconds(2);
+            powerupIndicators[i].SetActive(false);
+            hasPowerup = false;
+        }
+
+
     }
 }

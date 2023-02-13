@@ -4,19 +4,25 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    public float speed = 30f;
+    private float speed = 3f;
     private float forwardInput;
     private Rigidbody _rigidbody; //empuje, ***
-
     private GameObject focalPoint; //asignar el focal point
-    
     private float powerupForce = 15f;
-    public bool hasPowerup;//comprobar si lo ha tocado o no (on/off)
-    
+    private bool hasPowerup, hasPowerup2;//comprobar si lo ha tocado o no (on/off)
+    private float powerUpForce =15f ;
+    private float originalScale = 1.5f;
+    private float powerupScale = 2f;
+
     public GameObject[] powerupIndicators;
-    private void Start()
+
+    private void Awake()
     {
         _rigidbody = GetComponent<Rigidbody>(); //asignar variable ***
+    }
+    private void Start()
+    {
+       
         focalPoint = GameObject.Find("Focal_Point");  //asignar
     }
 
@@ -37,18 +43,31 @@ public class PlayerController : MonoBehaviour
 
             StartCoroutine(PowerupCountDown());
         }
+        if (other.gameObject.CompareTag("PowerUp2")) //
+        {
+            hasPowerup2 = true; //se activa
+            Destroy(other.gameObject);
+
+            StartCoroutine(PowerupCountDown());
+        }
     }
     private void OnCollisionEnter(Collision other)
     {
         if (other.gameObject.CompareTag("Enemy") && hasPowerup) //lo repele
         {
             Rigidbody enemyRigidbody = other.gameObject.GetComponent<Rigidbody>();
+           
             Vector3 awayFromPlayer =(other.gameObject.transform.position - transform.position).normalized; //que la distancia sea 1
             enemyRigidbody.AddForce(awayFromPlayer * powerupForce, ForceMode.Impulse);
         }
     }
     private IEnumerator PowerupCountDown() //IE = interface/ es una corrutina
     {
+
+        if (hasPowerup2)
+        {
+            transform.localScale = 2 * Vector3.one;
+        }
         //yield return new WaitForSeconds(6); //yield =esperar y devuelve 6s
         for (int i = 0; i < powerupIndicators.Length; i++)
         {
@@ -58,6 +77,13 @@ public class PlayerController : MonoBehaviour
             hasPowerup = false;
         }
 
+        if (hasPowerup2)
+        {
+            transform.localScale = originalScale * Vector3.one;
 
+        }
+
+        hasPowerup = false;
+        hasPowerup2 = false;
     }
 }

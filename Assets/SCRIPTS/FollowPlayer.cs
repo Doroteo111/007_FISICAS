@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class FollowPlayer : MonoBehaviour
 {
+    //los powers up indicators (visuales)
     private Transform playerTransform;
     void Start()
     {
@@ -11,7 +12,7 @@ public class FollowPlayer : MonoBehaviour
 
     }
 
-    private void LateUpdate()//
+    private void LateUpdate()
     {
         transform.position = playerTransform.position;
     }
